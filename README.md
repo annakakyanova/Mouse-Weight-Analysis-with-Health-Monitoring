@@ -82,16 +82,98 @@ Output parameters
  Smoothing spline algorithm
  
 The program uses an algorithm for constructing a smoothing spline with a given smoothing parameter (rh). Main steps:
+
 1.    Initialization of parameters:
-o	Specifying the spline node grid
-o    Initializing weight coefficients (rho)
+  
+•	Specifying the spline node grid
+
+•    Initializing weight coefficients (rho)
+
 2.    Solving the system of equations:
-o    Constructing a tridiagonal matrix of coefficients
-o    Solving using the Thomas algorithm
-o	Calculate spline coefficients
-3.    Interpolation:
-o    Calculate spline values at specified points
-o    Calculate first and second derivatives analytically
-5.2. Algorithm for determining zero crossings
+  
+•    Constructing a tridiagonal matrix of coefficients
+
+•    Solving using the Thomas algorithm
+
+•	Calculate spline coefficients
+
+ Interpolation:
+ 
+•    Calculate spline values at specified points
+
+• Calculate first and second derivatives analytically
+ 
+• Algorithm for determining zero crossings
+
 To determine the points where the derivative crosses the zero line:
+```
+find_zero_crossings <- function(x, y) {
+  crossings <- c()
+  for(i in 2:length(y)) {
+    if(y[i-1] * y[i] < 0) {
+      # Линейная интерполяция для точного определения точки пересечения
+      x_cross <- x[i-1] - y[i-1] * (x[i] - x[i-1]) / (y[i] - y[i-1])
+      crossings <- c(crossings, x_cross)
+    }
+  }
+  crossings
+}
+```
+ Algorithm for identifying health problems
+ -
+•    Comparison of the values of the first derivative with a critical threshold
+
+•    Identification of days when the rate of weight loss exceeds the permissible limit
+
+•    Visual and textual indication of problem periods
+
+Test example
+-
+Input data:
+```
+Day: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+Mass: 25.1, 25.3, 25.0, 24.8, 24.5, 24.2, 23.8, 23.5, 23.2, 22.9
+```
+Analysis parameters:
+```
+rh = 1.0
+critical_value = -0.6
+```
+Expected results:
+
+1. Weight graph: A smooth curve passing close to the measurement points
+   
+2. First derivative:
+   
+• Negative values (weight loss)
+
+• On days 6-7, the value may fall below -0.6 (if weight loss is accelerated)
+
+3.	Second derivative:
+   
+•    May show changes in the acceleration of weight loss
+
+•    Zero crossing points indicate a change in the nature of weight loss
+
+Output data (example of the first lines):
+-
+```
+Day      Weight    FirstDerivative  SecondDerivative
+1.00     25.10     -0.05            0.01
+1.25     25.08     -0.07            0.00
+1.50     25.05     -0.10           -0.01
+...      ...       ...              ...
+```
+Health notification:
+-
+If the value of the first derivative is less than -0.6 on certain days, a warning will appear:
+```
+⚠ WARNING: Animal is sick!
+Critical days: 6.5, 7.2
+Critical values: -0.65, -0.72
+```
+
+Access to the application: https://annakalyanova.shinyapps.io/mouse_weight_app/
+
+Dependencies: shiny, ggplot2, colourpicker, DT, readxl
 

@@ -49,8 +49,10 @@ o    Paste from clipboard (copy from Excel)
 
 •    Line and point sizes: Numeric values for setting thickness and size
 
+
 Output parameters
 -
+
  Tabular data
  -
 •    Day: Numeric (fractional) - interpolated day values

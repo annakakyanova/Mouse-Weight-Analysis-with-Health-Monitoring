@@ -111,7 +111,7 @@ find_zero_crossings <- function(x, y) {
   crossings <- c()
   for(i in 2:length(y)) {
     if(y[i-1] * y[i] < 0) {
-      # Линейная интерполяция для точного определения точки пересечения
+      # Linear interpolation to accurately determine the intersection point
       x_cross <- x[i-1] - y[i-1] * (x[i] - x[i-1]) / (y[i] - y[i-1])
       crossings <- c(crossings, x_cross)
     }
